@@ -9,6 +9,7 @@ import CheckoutView from '../views/CheckoutView.vue'
 import LoginView from '../views/LoginView.vue'
 import RegisterView from '../views/RegisterView.vue'
 import MyOrdersView from '../views/MyOrdersView.vue'
+import ProfileView from '../views/ProfileView.vue'
 import VnPayReturnView from '../views/VnPayReturnView.vue'
 
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
@@ -25,6 +26,7 @@ const routes = [
   { path: '/login', name: 'login', component: LoginView },
   { path: '/register', name: 'register', component: RegisterView },
   { path: '/my-orders', name: 'my-orders', component: MyOrdersView, meta: { requiresAuth: true } },
+  { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
   { path: '/vnpay-return', name: 'vnpay-return', component: VnPayReturnView },
 
   // Admin routes

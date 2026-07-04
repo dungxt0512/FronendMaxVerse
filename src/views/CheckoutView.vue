@@ -84,7 +84,7 @@ const submitting = ref(false)
 const error = ref('')
 
 const form = reactive({
-  receiverName: auth.user?.fullName || '',
+  receiverName: '',
   receiverPhone: '',
   shippingAddress: '',
   paymentMethod: 'COD'
@@ -125,8 +125,18 @@ async function handleSubmit() {
   }
 }
 
-onMounted(() => {
+onMounted(async () => {
   if (cart.items.length === 0) cart.fetchCart()
+
+  // Tự động điền thông tin từ hồ sơ
+  try {
+    const { data } = await api.get('/auth/profile')
+    form.receiverName = data.fullName || ''
+    form.receiverPhone = data.phoneNumber || ''
+    form.shippingAddress = data.address || ''
+  } catch (err) {
+    // Không có hồ sơ thì để trống, user tự điền
+  }
 })
 </script>
 

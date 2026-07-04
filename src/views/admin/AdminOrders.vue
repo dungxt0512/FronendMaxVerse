@@ -86,7 +86,7 @@ async function loadOrders() {
 async function updateStatus(order, newStatus) {
   try {
     await api.put(`/orders/${order.orderId}/status`, { orderStatus: newStatus })
-    order.orderStatus = newStatus
+    await loadOrders()
   } catch (err) {
     alert('Cập nhật trạng thái thất bại.')
   }

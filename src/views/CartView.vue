@@ -51,6 +51,7 @@
 <script setup>
 import { computed, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
+import { resolveImageUrl } from '../services/imageUrl'
 
 const cart = useCartStore()
 const placeholder = 'https://placehold.co/200x200/161B26/6B7280?text=MaxVerse'

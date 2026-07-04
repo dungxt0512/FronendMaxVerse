@@ -49,7 +49,7 @@
               class="size-tag"
               :class="{ active: selectedSize === variant.size, disabled: variant.quantity === 0 }"
               :disabled="variant.quantity === 0"
-              @click="selectedSize = variant.size"
+              @click="selectSize(variant)"
             >{{ variant.size }}</button>
           </div>
         </div>
@@ -130,6 +130,25 @@ function selectColor(color) {
   selectedColor.value = color
   selectedSize.value = null
   quantity.value = 1
+
+  const variantWithImage = product.value.variants.find(
+    v => v.color === color && v.variantImageUrl
+  )
+  if (variantWithImage) {
+    activeImage.value = resolveImageUrl(variantWithImage.variantImageUrl)
+  } else {
+    // Không có ảnh riêng thì quay về ảnh đại diện sản phẩm
+    activeImage.value = resolveImageUrl(product.value.imageUrl)
+  }
+}
+
+function selectSize(variant) {
+  selectedSize.value = variant.size
+
+  // Chuyển ảnh sang ảnh riêng của variant size/màu cụ thể nếu có
+  if (variant.variantImageUrl) {
+    activeImage.value = resolveImageUrl(variant.variantImageUrl)
+  }
 }
 
 function formatPrice(value) {
@@ -161,12 +180,10 @@ async function handleAddToCart() {
   message.value = ''
   try {
     await cart.addToCart(selectedVariant.value.variantId, quantity.value)
-    message.value = 'Đã thêm vào giỏ hàng!'
-    messageType.value = 'success'
+    router.push('/cart')
   } catch (err) {
     message.value = err.response?.data?.message || 'Có lỗi xảy ra, vui lòng thử lại.'
     messageType.value = 'error'
-  } finally {
     adding.value = false
   }
 }

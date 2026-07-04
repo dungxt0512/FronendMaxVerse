@@ -24,6 +24,7 @@
         <div v-if="auth.isLoggedIn" class="user-menu">
           <button class="user-btn" @click="menuOpen = !menuOpen">{{ auth.user.fullName.split(' ')[0] }} ▾</button>
           <div v-if="menuOpen" class="dropdown" @click="menuOpen = false">
+            <router-link to="/profile">Hồ sơ của tôi</router-link>
             <router-link to="/my-orders">Đơn hàng của tôi</router-link>
             <button @click="handleLogout">Đăng xuất</button>
           </div>
