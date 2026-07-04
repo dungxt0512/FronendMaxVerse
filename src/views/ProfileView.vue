@@ -1,6 +1,7 @@
 <template>
   <div class="container profile-page">
-    <h1 class="heading-display page-title">HỒ SƠ CÁ NHÂN</h1>
+  <BackButton />
+  <h1 class="heading-display page-title">HỒ SƠ CÁ NHÂN</h1>
 
     <div class="profile-layout">
       <form class="profile-form card" @submit.prevent="handleSubmit">
@@ -50,6 +51,7 @@
 import { reactive, ref, onMounted } from 'vue'
 import api from '../services/api'
 import { useAuthStore } from '../stores/auth'
+import BackButton from '../components/BackButton.vue'
 
 const auth = useAuthStore()
 const submitting = ref(false)

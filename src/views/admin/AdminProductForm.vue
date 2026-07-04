@@ -1,6 +1,7 @@
 <template>
   <div class="container admin-page">
-    <h1 class="heading-display page-title">{{ isEdit ? 'SỬA SẢN PHẨM' : 'THÊM SẢN PHẨM' }}</h1>
+  <BackButton />
+  <h1 class="heading-display page-title">{{ isEdit ? 'SỬA SẢN PHẨM' : 'THÊM SẢN PHẨM' }}</h1>
 
     <form class="product-form card" @submit.prevent="handleSubmit">
       <div class="form-row">
@@ -176,6 +177,7 @@
 import { reactive, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../../services/api'
+import BackButton from '../../components/BackButton.vue'
 
 const props = defineProps({ id: { type: [String, Number], default: null } })
 const router = useRouter()
@@ -313,7 +315,22 @@ async function loadProduct() {
   form.price = data.price
   form.discountPrice = data.discountPrice
   form.imageUrl = data.imageUrl
-  form.variants = data.variants.map(v => ({ size: v.size, color: v.color, quantity: v.quantity }))
+  form.variants = data.variants.map(v => {
+  const matchedSize = sizes.value.find(s => s.sizeValue === v.size)
+  const matchedColor = colors.value.find(c => c.colorName === v.color)
+
+  return {
+    variantId: v.variantId,
+    size: v.size,
+    color: v.color,
+    quantity: v.quantity,
+    sku: v.sku || '',
+    variantPrice: v.variantPrice || null,
+    variantImageUrl: v.variantImageUrl || '',
+    sizeId: v.sizeId || matchedSize?.sizeId || null,
+    colorId: v.colorId || matchedColor?.colorId || null
+  }
+})
     extraImages.value = data.images.map(img => ({
     imageId: img.imageId,
     imageUrl: img.imageUrl

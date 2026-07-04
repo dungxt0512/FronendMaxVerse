@@ -15,7 +15,11 @@
         <h4>Hỗ trợ</h4>
         <a href="#">Chính sách đổi trả</a>
         <a href="#">Hướng dẫn chọn size</a>
-        <a href="#">Liên hệ</a>
+        <div class="contact-info">
+          <h4 style="margin-top:16px;">Liên hệ</h4>
+          <a href="mailto:dungz951@gmail.com">dungz951@gmail.com</a>
+          <a href="tel:0989803376">0989 803 376</a>
+        </div>
       </div>
     </div>
     <div class="footer-bottom">

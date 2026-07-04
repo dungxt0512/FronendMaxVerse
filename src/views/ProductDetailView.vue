@@ -1,6 +1,7 @@
 <template>
   <div v-if="product" class="container detail-page">
-    <div class="detail-grid">
+  <BackButton />
+  <div class="detail-grid">
       <!-- IMAGES -->
       <div class="gallery">
         <div class="main-img">
@@ -86,6 +87,7 @@ import api from '../services/api'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
 import { resolveImageUrl } from '../services/imageUrl'
+import BackButton from '../components/BackButton.vue'
 
 const props = defineProps({ id: { type: [String, Number], required: true } })
 const router = useRouter()

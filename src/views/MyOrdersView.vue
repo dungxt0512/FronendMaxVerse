@@ -1,6 +1,7 @@
 <template>
   <div class="container orders-page">
-    <h1 class="heading-display page-title">ĐƠN HÀNG CỦA TÔI</h1>
+  <BackButton />
+  <h1 class="heading-display page-title">ĐƠN HÀNG CỦA TÔI</h1>
 
     <div v-if="loading" class="state-msg">Đang tải...</div>
     <div v-else-if="orders.length === 0" class="state-msg">
@@ -41,6 +42,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../services/api'
+import BackButton from '../components/BackButton.vue'
 
 const orders = ref([])
 const loading = ref(true)

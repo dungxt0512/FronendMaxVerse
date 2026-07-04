@@ -167,6 +167,9 @@ async function loadFilterOptions() {
 
 watch(() => route.query, (q) => {
   filters.keyword = q.keyword || ''
+  filters.categoryId = q.categoryId ? Number(q.categoryId) : null
+  filters.brandId = q.brandId ? Number(q.brandId) : null
+  filters.page = 1
   fetchProducts()
 })
 

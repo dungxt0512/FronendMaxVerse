@@ -1,6 +1,7 @@
 <template>
   <div class="container admin-page">
-    <h1 class="heading-display page-title">QUẢN LÝ ĐƠN HÀNG</h1>
+  <BackButton />
+  <h1 class="heading-display page-title">QUẢN LÝ ĐƠN HÀNG</h1>
 
     <div class="filter-tabs">
       <button v-for="tab in tabs" :key="tab.value" :class="{ active: filterStatus === tab.value }" @click="filterStatus = tab.value; loadOrders()">
@@ -50,6 +51,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../../services/api'
+import BackButton from '../../components/BackButton.vue'
 
 const orders = ref([])
 const loading = ref(true)

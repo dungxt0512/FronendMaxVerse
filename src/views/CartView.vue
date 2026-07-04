@@ -1,6 +1,7 @@
 <template>
   <div class="container cart-page">
-    <h1 class="heading-display page-title">GIỎ HÀNG</h1>
+  <BackButton />
+  <h1 class="heading-display page-title">GIỎ HÀNG</h1>
 
     <div v-if="cart.loading" class="state-msg">Đang tải giỏ hàng...</div>
 
@@ -52,6 +53,7 @@
 import { computed, onMounted } from 'vue'
 import { useCartStore } from '../stores/cart'
 import { resolveImageUrl } from '../services/imageUrl'
+import BackButton from '../components/BackButton.vue'
 
 const cart = useCartStore()
 const placeholder = 'https://placehold.co/200x200/161B26/6B7280?text=MaxVerse'

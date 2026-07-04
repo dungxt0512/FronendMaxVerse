@@ -6,7 +6,7 @@
       <nav class="nav-links">
         <router-link to="/">Trang chủ</router-link>
         <router-link to="/products">Sản phẩm</router-link>
-        <router-link v-if="auth.isLoggedIn" to="/my-orders">Đơn hàng</router-link>
+        <router-link v-if="auth.isLoggedIn && !auth.isAdmin" to="/my-orders">Đơn hàng</router-link>
         <router-link v-if="auth.isAdmin" to="/admin">Quản trị</router-link>
       </nav>
 
@@ -17,7 +17,7 @@
 
       <div class="header-actions">
         <router-link v-if="!auth.isAdmin" to="/cart" class="cart-link">
-          Mua Hàng
+          Giỏ hàng
           <span v-if="cart.totalItems > 0" class="cart-badge">{{ cart.totalItems }}</span>
         </router-link>
 
@@ -25,7 +25,7 @@
           <button class="user-btn" @click="menuOpen = !menuOpen">{{ auth.user.fullName.split(' ')[0] }} ▾</button>
           <div v-if="menuOpen" class="dropdown" @click="menuOpen = false">
             <router-link to="/profile">Hồ sơ của tôi</router-link>
-            <router-link to="/my-orders">Đơn hàng của tôi</router-link>
+            <router-link v-if="!auth.isAdmin" to="/my-orders">Đơn hàng của tôi</router-link>
             <button @click="handleLogout">Đăng xuất</button>
           </div>
         </div>

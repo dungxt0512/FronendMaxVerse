@@ -1,6 +1,7 @@
 <template>
   <div class="container checkout-page">
-    <h1 class="heading-display page-title">THANH TOÁN</h1>
+  <BackButton />
+  <h1 class="heading-display page-title">THANH TOÁN</h1>
 
     <div class="checkout-layout">
       <form class="checkout-form card" @submit.prevent="handleSubmit">
@@ -75,6 +76,7 @@ import { useRouter } from 'vue-router'
 import api from '../services/api'
 import { useCartStore } from '../stores/cart'
 import { useAuthStore } from '../stores/auth'
+import BackButton from '../components/BackButton.vue'
 
 const router = useRouter()
 const cart = useCartStore()
