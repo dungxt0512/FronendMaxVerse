@@ -85,6 +85,7 @@ import { useRouter } from 'vue-router'
 import api from '../services/api'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
+import { resolveImageUrl } from '../services/imageUrl'
 
 const props = defineProps({ id: { type: [String, Number], required: true } })
 const router = useRouter()
@@ -105,7 +106,8 @@ const placeholder = 'https://placehold.co/600x600/161B26/6B7280?text=MaxVerse'
 
 const allImages = computed(() => {
   if (!product.value) return [placeholder]
-  const imgs = [product.value.imageUrl, ...product.value.images].filter(Boolean)
+  const extraUrls = product.value.images.map(img => img.imageUrl)
+  const imgs = [product.value.imageUrl, ...extraUrls].filter(Boolean).map(resolveImageUrl)
   return imgs.length ? imgs : [placeholder]
 })
 
@@ -139,7 +141,7 @@ async function loadProduct() {
   try {
     const { data } = await api.get(`/products/${props.id}`)
     product.value = data
-    activeImage.value = data.imageUrl || placeholder
+    activeImage.value = resolveImageUrl(data.imageUrl)
     if (availableColors.value.length === 1) selectedColor.value = availableColors.value[0]
   } catch (err) {
     product.value = null

@@ -12,7 +12,7 @@
     <div v-else class="cart-layout">
       <div class="cart-items">
         <div v-for="item in cart.items" :key="item.cartItemId" class="cart-item card">
-          <img :src="item.imageUrl || placeholder" :alt="item.productName" class="item-img" />
+          <img :src="resolveImageUrl(item.imageUrl)" :alt="item.productName" class="item-img" />
           <div class="item-info">
             <h3>{{ item.productName }}</h3>
             <p class="variant-info">Size {{ item.size }} · {{ item.color }}</p>

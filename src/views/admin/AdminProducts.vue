@@ -19,7 +19,7 @@
       </thead>
       <tbody>
         <tr v-for="p in products" :key="p.productId">
-          <td><img :src="p.imageUrl || placeholder" class="row-img" /></td>
+          <td><img :src="resolveImageUrl(p.imageUrl)" class="row-img" /></td>
           <td>{{ p.productName }}</td>
           <td>{{ p.brandName }}</td>
           <td>{{ formatPrice(p.discountPrice || p.price) }}</td>
@@ -47,6 +47,7 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../../services/api'
+import { resolveImageUrl } from '../../services/imageUrl'
 
 const products = ref([])
 const loading = ref(true)

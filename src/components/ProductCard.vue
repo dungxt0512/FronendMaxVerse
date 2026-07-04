@@ -1,7 +1,7 @@
 <template>
   <router-link :to="`/products/${product.productId}`" class="product-card card">
     <div class="img-wrap">
-      <img :src="product.imageUrl || placeholder" :alt="product.productName" />
+      <img :src="resolveImageUrl(product.imageUrl)" :alt="product.productName" />
       <span v-if="product.discountPrice" class="discount-badge">
         -{{ discountPercent }}%
       </span>
@@ -20,6 +20,7 @@
 
 <script setup>
 import { computed } from 'vue'
+import { resolveImageUrl } from '../services/imageUrl'
 
 const props = defineProps({
   product: { type: Object, required: true }
