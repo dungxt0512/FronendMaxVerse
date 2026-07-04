@@ -16,7 +16,7 @@
       </form>
 
       <div class="header-actions">
-        <router-link to="/cart" class="cart-link">
+        <router-link v-if="!auth.isAdmin" to="/cart" class="cart-link">
           Mua Hàng
           <span v-if="cart.totalItems > 0" class="cart-badge">{{ cart.totalItems }}</span>
         </router-link>

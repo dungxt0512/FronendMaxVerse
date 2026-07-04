@@ -27,11 +27,17 @@
 
         <div class="filter-group">
           <h4>Khoảng giá</h4>
-          <div class="price-inputs">
-            <input type="number" v-model.number="filters.minPrice" placeholder="Từ" class="form-input" />
-            <input type="number" v-model.number="filters.maxPrice" placeholder="Đến" class="form-input" />
+          <div class="price-range-list">
+            <label
+              v-for="(range, index) in priceRanges"
+              :key="index"
+              class="price-range-item"
+              :class="{ active: selectedPriceRange === index }"
+              @click="applyPriceRange(index)"
+            >
+              {{ range.label }}
+            </label>
           </div>
-          <button class="btn btn-secondary btn-block" style="margin-top:10px" @click="fetchProducts">Áp dụng</button>
         </div>
 
         <button class="clear-all" @click="resetFilters">Xóa tất cả bộ lọc</button>
@@ -81,6 +87,17 @@ const loading = ref(true)
 const totalCount = ref(0)
 const totalPages = ref(1)
 
+const priceRanges = [
+  { label: 'Tất cả mức giá', min: null, max: null },
+  { label: 'Dưới 500.000đ', min: null, max: 500000 },
+  { label: '500.000đ - 1.000.000đ', min: 500000, max: 1000000 },
+  { label: '1.000.000đ - 2.000.000đ', min: 1000000, max: 2000000 },
+  { label: '2.000.000đ - 3.000.000đ', min: 2000000, max: 3000000 },
+  { label: '3.000.000đ - 5.000.000đ', min: 3000000, max: 5000000 },
+  { label: 'Trên 5.000.000đ', min: 5000000, max: null }
+]
+const selectedPriceRange = ref(0)
+
 const filters = reactive({
   keyword: route.query.keyword || '',
   brandId: route.query.brandId ? Number(route.query.brandId) : null,
@@ -91,6 +108,15 @@ const filters = reactive({
   page: 1,
   pageSize: 12
 })
+
+function applyPriceRange(index) {
+  selectedPriceRange.value = index
+  const range = priceRanges[index]
+  filters.minPrice = range.min
+  filters.maxPrice = range.max
+  filters.page = 1
+  fetchProducts()
+}
 
 function applyBrand(brandId) {
   filters.brandId = filters.brandId === brandId ? null : brandId
@@ -126,6 +152,7 @@ function resetFilters() {
   filters.maxPrice = null
   filters.sortBy = 'newest'
   filters.page = 1
+  selectedPriceRange.value = 0
   fetchProducts()
 }
 
@@ -234,6 +261,31 @@ onMounted(() => {
 }
 .pagination button:disabled { opacity: 0.4; cursor: not-allowed; }
 .pagination button:not(:disabled):hover { border-color: var(--accent-orange); color: var(--accent-orange); }
+
+.price-range-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.price-range-item {
+  padding: 8px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.15s ease;
+}
+.price-range-item:hover {
+  color: var(--text-primary);
+  background: var(--bg-elevated-2);
+}
+.price-range-item.active {
+  color: var(--accent-orange);
+  border-color: var(--accent-orange);
+  background: rgba(255, 107, 53, 0.08);
+  font-weight: 600;
+}
 
 @media (max-width: 900px) {
   .layout { grid-template-columns: 1fr; }
