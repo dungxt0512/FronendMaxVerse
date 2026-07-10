@@ -17,7 +17,7 @@
 
       <div class="header-actions">
         <router-link v-if="!auth.isAdmin" to="/cart" class="cart-link">
-          Giỏ hàng
+          🛒
           <span v-if="cart.totalItems > 0" class="cart-badge">{{ cart.totalItems }}</span>
         </router-link>
 

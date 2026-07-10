@@ -1,6 +1,5 @@
 <template>
   <div class="container admin-page">
-  <BackButton />
   <h1 class="heading-display page-title">QUẢN LÝ ĐƠN HÀNG</h1>
 
     <div class="filter-tabs">
@@ -35,6 +34,10 @@
           <td>{{ statusLabel(o.orderStatus) }}</td>
           <td>{{ formatDate(o.createdAt) }}</td>
           <td>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <router-link :to="`/admin/orders/${o.orderId}`" class="action-btn view">
+                Xem chi tiết
+              </router-link>
             <select class="status-select" :value="o.orderStatus" @change="updateStatus(o, $event.target.value)">
               <option value="Processing">Đang xử lý</option>
               <option value="Shipping">Đang giao</option>
@@ -51,7 +54,6 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../../services/api'
-import BackButton from '../../components/BackButton.vue'
 
 const orders = ref([])
 const loading = ref(true)
@@ -120,6 +122,9 @@ onMounted(loadOrders)
   font-size: 14px;
 }
 .admin-table th { color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 12px; }
+
+.action-btn { padding: 6px 12px; border-radius: var(--radius-sm); font-size: 13px; font-weight: 600; }
+.action-btn.view { background: rgba(61,90,254,0.15); color: var(--accent-blue); }
 
 .status-select {
   background: var(--bg-elevated-2);

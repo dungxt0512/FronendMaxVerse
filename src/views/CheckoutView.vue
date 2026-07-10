@@ -22,6 +22,16 @@
           <textarea v-model="form.shippingAddress" class="form-input" rows="3" required></textarea>
         </div>
 
+        <h3 class="payment-title">Mã khuyến mãi</h3>
+          <div class="promo-row">
+            <input v-model="promoCode" type="text" class="form-input" placeholder="Nhập mã giảm giá (VD: MAXVERSE10)" style="text-transform:uppercase;" />
+            <button type="button" class="btn btn-secondary" @click="applyPromo" :disabled="applyingPromo">
+              {{ applyingPromo ? '...' : 'Áp dụng' }}
+            </button>
+          </div>
+          <p v-if="promoMsg" class="promo-msg" :class="promoSuccess ? 'success' : 'error'">{{ promoMsg }}</p>
+          <p v-if="promoSuccess" class="promo-discount">Giảm: -{{ formatPrice(discountAmount) }}</p>
+
         <h3 class="payment-title">Phương thức thanh toán</h3>
         <div class="payment-options">
           <label class="payment-option" :class="{ active: form.paymentMethod === 'COD' }">
@@ -94,8 +104,35 @@ const form = reactive({
 
 const finalTotal = computed(() => {
   const shipping = cart.totalAmount >= 1000000 ? 0 : 30000
-  return cart.totalAmount + shipping
+  return cart.totalAmount + shipping - discountAmount.value
 })
+
+const promoCode = ref('')
+const applyingPromo = ref(false)
+const promoMsg = ref('')
+const promoSuccess = ref(false)
+const discountAmount = ref(0)
+
+async function applyPromo() {
+  if (!promoCode.value) return
+  applyingPromo.value = true
+  promoMsg.value = ''
+  promoSuccess.value = false
+  try {
+    const { data } = await api.post('/promotions/apply', {
+      code: promoCode.value,
+      orderAmount: cart.totalAmount
+    })
+    discountAmount.value = data.discountAmount
+    promoMsg.value = `Áp dụng thành công: ${data.description}`
+    promoSuccess.value = true
+  } catch (err) {
+    promoMsg.value = err.response?.data?.message || 'Mã không hợp lệ.'
+    discountAmount.value = 0
+  } finally {
+    applyingPromo.value = false
+  }
+}
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value) + 'đ'

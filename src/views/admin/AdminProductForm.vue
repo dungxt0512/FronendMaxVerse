@@ -1,6 +1,5 @@
 <template>
   <div class="container admin-page">
-  <BackButton />
   <h1 class="heading-display page-title">{{ isEdit ? 'SỬA SẢN PHẨM' : 'THÊM SẢN PHẨM' }}</h1>
 
     <form class="product-form card" @submit.prevent="handleSubmit">
@@ -177,7 +176,6 @@
 import { reactive, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../../services/api'
-import BackButton from '../../components/BackButton.vue'
 
 const props = defineProps({ id: { type: [String, Number], default: null } })
 const router = useRouter()

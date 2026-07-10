@@ -1,6 +1,5 @@
 <template>
   <div class="container admin-page">
-  <BackButton />
   <h1 class="heading-display page-title">QUẢN TRỊ HỆ THỐNG</h1>
 
     <div class="stats-grid">
@@ -40,7 +39,6 @@
 <script setup>
 import { reactive, onMounted } from 'vue'
 import api from '../../services/api'
-import BackButton from '../../components/BackButton.vue'
 
 const stats = reactive({
   totalOrders: 0,

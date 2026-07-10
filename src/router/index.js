@@ -13,9 +13,12 @@ import ProfileView from '../views/ProfileView.vue'
 import VnPayReturnView from '../views/VnPayReturnView.vue'
 
 import AdminDashboard from '../views/admin/AdminDashboard.vue'
+import AdminLayout from '../layouts/AdminLayout.vue'
 import AdminProducts from '../views/admin/AdminProducts.vue'
 import AdminProductForm from '../views/admin/AdminProductForm.vue'
 import AdminOrders from '../views/admin/AdminOrders.vue'
+import AdminPromotions from '../views/admin/AdminPromotions.vue'
+import AdminOrderDetail from '../views/admin/AdminOrderDetail.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
@@ -28,13 +31,23 @@ const routes = [
   { path: '/my-orders', name: 'my-orders', component: MyOrdersView, meta: { requiresAuth: true } },
   { path: '/profile', name: 'profile', component: ProfileView, meta: { requiresAuth: true } },
   { path: '/vnpay-return', name: 'vnpay-return', component: VnPayReturnView },
+  
 
   // Admin routes
-  { path: '/admin', name: 'admin-dashboard', component: AdminDashboard, meta: { requiresAdmin: true } },
-  { path: '/admin/products', name: 'admin-products', component: AdminProducts, meta: { requiresAdmin: true } },
-  { path: '/admin/products/new', name: 'admin-product-new', component: AdminProductForm, meta: { requiresAdmin: true } },
-  { path: '/admin/products/:id/edit', name: 'admin-product-edit', component: AdminProductForm, props: true, meta: { requiresAdmin: true } },
-  { path: '/admin/orders', name: 'admin-orders', component: AdminOrders, meta: { requiresAdmin: true } }
+  {
+    path: '/admin',
+    component: AdminLayout,
+    meta: { requiresAdmin: true },
+    children: [
+      { path: '', name: 'admin-dashboard', component: AdminDashboard },
+      { path: 'products', name: 'admin-products', component: AdminProducts },
+      { path: 'products/new', name: 'admin-product-new', component: AdminProductForm },
+      { path: 'products/:id/edit', name: 'admin-product-edit', component: AdminProductForm, props: true },
+      { path: 'orders', name: 'admin-orders', component: AdminOrders },
+      { path: 'promotions', name: 'admin-promotions', component: AdminPromotions },
+      { path: 'orders/:id', name: 'admin-order-detail', component: AdminOrderDetail, props: true }
+    ]
+  }
 ]
 
 const router = createRouter({

@@ -1,6 +1,5 @@
 <template>
   <div class="container admin-page">
-  <BackButton />
   <div class="page-header">
       <h1 class="heading-display page-title">QUẢN LÝ SẢN PHẨM</h1>
       <router-link to="/admin/products/new" class="btn btn-primary">+ Thêm sản phẩm</router-link>
@@ -49,7 +48,6 @@
 import { ref, onMounted } from 'vue'
 import api from '../../services/api'
 import { resolveImageUrl } from '../../services/imageUrl'
-import BackButton from '../../components/BackButton.vue'
 
 const products = ref([])
 const loading = ref(true)
