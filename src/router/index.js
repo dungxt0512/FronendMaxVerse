@@ -18,7 +18,7 @@ import AdminProducts from '../views/admin/AdminProducts.vue'
 import AdminProductForm from '../views/admin/AdminProductForm.vue'
 import AdminOrders from '../views/admin/AdminOrders.vue'
 import AdminPromotions from '../views/admin/AdminPromotions.vue'
-import AdminOrderDetail from '../views/admin/AdminOrderDetail.vue'
+import AdminOrderDetail from '../views/admin/AdminOrderDetails.vue'
 
 const routes = [
   { path: '/', name: 'home', component: HomeView },
