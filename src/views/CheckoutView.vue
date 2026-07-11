@@ -4,7 +4,7 @@
   <h1 class="heading-display page-title">THANH TOÁN</h1>
 
     <div class="checkout-layout">
-      <form class="checkout-form card" @submit.prevent="handleSubmit">
+      <form class="checkout-form card" @submit.prevent="showOrderConfirm = true">
         <h3>Thông tin nhận hàng</h3>
 
         <div class="form-group">
@@ -78,6 +78,14 @@
       </aside>
     </div>
   </div>
+  <ConfirmModal
+  v-model="showOrderConfirm"
+  title="Xác nhận đặt hàng"
+  :message="`Tổng thanh toán: ${formatPrice(finalTotal)}. Bạn xác nhận đặt hàng?`"
+  confirmText="Đặt hàng ngay"
+  type="primary"
+  @confirm="handleSubmit"
+/>
 </template>
 
 <script setup>
@@ -87,10 +95,12 @@ import api from '../services/api'
 import { useCartStore } from '../stores/cart'
 import { useAuthStore } from '../stores/auth'
 import BackButton from '../components/BackButton.vue'
+import ConfirmModal from '../components/ConfirmModal.vue'
 
 const router = useRouter()
 const cart = useCartStore()
 const auth = useAuthStore()
+const showOrderConfirm = ref(false)
 
 const submitting = ref(false)
 const error = ref('')

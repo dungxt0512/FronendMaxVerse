@@ -104,11 +104,20 @@
       </div>
     </div>
   </div>
+  <ConfirmModal
+  v-model="showDeletePromoConfirm"
+  title="Xóa mã khuyến mãi"
+  :message="`Bạn chắc chắn muốn xóa mã '${promoToDelete?.code}'?`"
+  confirmText="Xóa"
+  type="danger"
+  @confirm="doDeletePromo"
+/>
 </template>
 
 <script setup>
 import { reactive, ref, onMounted } from 'vue'
 import api from '../../services/api'
+import ConfirmModal from '../../components/ConfirmModal.vue'
 
 const promotions = ref([])
 const loading = ref(true)
@@ -116,6 +125,8 @@ const showForm = ref(false)
 const editingId = ref(null)
 const saving = ref(false)
 const formError = ref('')
+const showDeletePromoConfirm = ref(false)
+const promoToDelete = ref(null)
 
 const form = reactive({
   code: '', description: '', discountType: 'Percent',
@@ -168,9 +179,14 @@ async function savePromo() {
   }
 }
 
-async function deletePromo(promo) {
-  if (!window.confirm(`Xóa mã "${promo.code}"?`)) return
-  await api.delete(`/promotions/${promo.promotionId}`)
+function deletePromo(promo) {
+  promoToDelete.value = promo
+  showDeletePromoConfirm.value = true
+}
+
+async function doDeletePromo() {
+  if (!promoToDelete.value) return
+  await api.delete(`/promotions/${promoToDelete.value.promotionId}`)
   await loadPromotions()
 }
 

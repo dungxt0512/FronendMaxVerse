@@ -89,12 +89,28 @@
       </div>
     </div>
   </div>
+  <ConfirmModal
+  v-model="showCancelConfirm"
+  title="Hủy đơn hàng"
+  message="Bạn chắc chắn muốn hủy đơn này? Tồn kho sẽ được hoàn lại tự động."
+  confirmText="Hủy đơn"
+  type="danger"
+  @confirm="doUpdateStatus('Cancelled')"
+/>
+<ConfirmModal
+  v-model="showSuccessModal"
+  title="Thành công"
+  :message="successMessage"
+  confirmText="Đóng"
+  type="primary"
+/>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import api from '../../services/api'
+import ConfirmModal from '../../components/ConfirmModal.vue'
 
 const route = useRoute()
 const order = ref(null)
@@ -102,6 +118,10 @@ const loading = ref(true)
 const newStatus = ref('')
 const updating = ref(false)
 const statusMsg = ref('')
+const showCancelConfirm = ref(false)
+const pendingStatus = ref('')
+const showSuccessModal = ref(false)
+const successMessage = ref('')
 
 const statusFlow = [
   { value: 'Processing', label: 'Chờ xử lý', level: 1 },
@@ -152,11 +172,21 @@ async function loadOrder() {
 
 async function updateStatus() {
   if (!newStatus.value) return
+  if (newStatus.value === 'Cancelled') {
+    pendingStatus.value = 'Cancelled'
+    showCancelConfirm.value = true
+    return
+  }
+  await doUpdateStatus(newStatus.value)
+}
+
+async function doUpdateStatus(status) {
   updating.value = true
   statusMsg.value = ''
   try {
-    await api.put(`/orders/${order.value.orderId}/status`, { orderStatus: newStatus.value })
-    statusMsg.value = 'Cập nhật trạng thái thành công!'
+    const { data } = await api.put(`/orders/${order.value.orderId}/status`, { orderStatus: status })
+    successMessage.value = `Đã chuyển trạng thái sang "${statusLabel(data.orderStatus || status)}" thành công!`
+    showSuccessModal.value = true
     newStatus.value = ''
     await loadOrder()
   } catch (err) {

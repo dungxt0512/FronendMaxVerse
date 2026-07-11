@@ -170,12 +170,21 @@
       </div>
     </form>
   </div>
+  <ConfirmModal
+  v-model="showSuccessModal"
+  title="Thành công"
+  :message="successMessage"
+  confirmText="Đóng"
+  type="primary"
+  @confirm="onSuccessConfirm"
+/>
 </template>
 
 <script setup>
 import { reactive, ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import api from '../../services/api'
+import ConfirmModal from '../../components/ConfirmModal.vue'
 
 const props = defineProps({ id: { type: [String, Number], default: null } })
 const router = useRouter()
@@ -190,6 +199,8 @@ const error = ref('')
 const imageFile = ref(null)
 const localPreviewUrl = ref('')
 const variantImageFiles = ref({})
+const showSuccessModal = ref(false)
+const successMessage = ref('')
 
 const extraImages = ref([])
 const pendingImages = ref([])
@@ -393,12 +404,19 @@ async function handleSubmit() {
       await uploadPendingImages(data.productId)
     }
 
-    router.push('/admin/products')
+    successMessage.value = isEdit.value
+      ? 'Cập nhật sản phẩm thành công!'
+      : 'Thêm sản phẩm mới thành công!'
+    showSuccessModal.value = true
   } catch (err) {
     error.value = err.response?.data?.message || 'Lưu sản phẩm thất bại.'
   } finally {
     submitting.value = false
   }
+}
+
+function onSuccessConfirm() {
+  router.push('/admin/products')
 }
 
 onMounted(async () => {

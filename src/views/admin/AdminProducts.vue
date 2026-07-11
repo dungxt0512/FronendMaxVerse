@@ -42,18 +42,29 @@
       <button :disabled="page >= totalPages" @click="page++; loadProducts()">Sau ›</button>
     </div>
   </div>
+  <ConfirmModal
+  v-model="showDeleteConfirm"
+  title="Xóa sản phẩm"
+  :message="`Bạn chắc chắn muốn xóa '${productToDelete?.productName}'? Sản phẩm sẽ bị ẩn khỏi cửa hàng.`"
+  confirmText="Xóa"
+  type="danger"
+  @confirm="doDeleteProduct"
+/>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../../services/api'
 import { resolveImageUrl } from '../../services/imageUrl'
+import ConfirmModal from '../../components/ConfirmModal.vue'
 
 const products = ref([])
 const loading = ref(true)
 const page = ref(1)
 const totalPages = ref(1)
 const placeholder = 'https://placehold.co/100x100/161B26/6B7280?text=MV'
+const showDeleteConfirm = ref(false)
+const productToDelete = ref(null)
 
 function formatPrice(value) {
   return new Intl.NumberFormat('vi-VN').format(value) + 'đ'
@@ -70,10 +81,15 @@ async function loadProducts() {
   }
 }
 
-async function confirmDelete(product) {
-  if (!window.confirm(`Xóa sản phẩm "${product.productName}"? Hành động này sẽ ẩn sản phẩm khỏi cửa hàng.`)) return
+function confirmDelete(product) {
+  productToDelete.value = product
+  showDeleteConfirm.value = true
+}
+
+async function doDeleteProduct() {
+  if (!productToDelete.value) return
   try {
-    await api.delete(`/products/${product.productId}`)
+    await api.delete(`/products/${productToDelete.value.productId}`)
     await loadProducts()
   } catch (err) {
     alert(err.response?.data?.message || 'Xóa sản phẩm thất bại.')

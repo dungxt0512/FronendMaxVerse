@@ -33,10 +33,19 @@
       </div>
     </div>
   </header>
+  <ConfirmModal
+    v-model="showLogoutConfirm"
+    title="Đăng xuất"
+    message="Bạn có chắc muốn đăng xuất khỏi MaxVerse không?"
+    confirmText="Đăng xuất"
+    type="danger"
+    @confirm="doLogout"
+  />
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
+import ConfirmModal from './ConfirmModal.vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
@@ -46,12 +55,18 @@ const auth = useAuthStore()
 const cart = useCartStore()
 const keyword = ref('')
 const menuOpen = ref(false)
+const showLogoutConfirm = ref(false)
 
 function search() {
   router.push({ path: '/products', query: { keyword: keyword.value } })
 }
 
 function handleLogout() {
+  menuOpen.value = false
+  showLogoutConfirm.value = true
+}
+
+function doLogout() {
   auth.logout()
   cart.clearLocal()
   router.push('/')

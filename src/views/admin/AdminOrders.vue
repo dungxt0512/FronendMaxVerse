@@ -38,26 +38,50 @@
               <router-link :to="`/admin/orders/${o.orderId}`" class="action-btn view">
                 Xem chi tiết
               </router-link>
-            <select class="status-select" :value="o.orderStatus" @change="updateStatus(o, $event.target.value)">
-              <option value="Processing">Đang xử lý</option>
-              <option value="Shipping">Đang giao</option>
-              <option value="Completed">Hoàn tất</option>
-              <option value="Cancelled">Đã hủy</option>
-            </select>
+              <select class="status-select" :value="o.orderStatus" @change="updateStatus(o, $event.target.value)">
+                <option value="Processing">Đang xử lý</option>
+                <option value="Confirmed">Đã xác nhận</option>
+                <option value="Shipping">Đang giao</option>
+                <option value="Completed">Hoàn tất</option>
+                <option value="Cancelled">Đã hủy</option>
+              </select>
+            </div>
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+  <!-- Thông báo thành công -->
+<ConfirmModal
+  v-model="showSuccessModal"
+  title="Cập nhật thành công"
+  :message="successMessage"
+  confirmText="Đóng"
+  type="primary"
+/>
+
+<!-- Thông báo lỗi -->
+<ConfirmModal
+  v-model="showErrorModal"
+  title="Không thể cập nhật"
+  :message="errorMessage"
+  confirmText="Đóng"
+  type="danger"
+/>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
 import api from '../../services/api'
+import ConfirmModal from '../../components/ConfirmModal.vue'
 
 const orders = ref([])
 const loading = ref(true)
 const filterStatus = ref('')
+const showSuccessModal = ref(false)
+const successMessage = ref('')
+const showErrorModal = ref(false)
+const errorMessage = ref('')
 
 const tabs = [
   { label: 'Tất cả', value: '' },
@@ -90,9 +114,12 @@ async function loadOrders() {
 async function updateStatus(order, newStatus) {
   try {
     await api.put(`/orders/${order.orderId}/status`, { orderStatus: newStatus })
+    successMessage.value = `Đơn #${order.orderCode} đã cập nhật trạng thái thành công!`
+    showSuccessModal.value = true
     await loadOrders()
   } catch (err) {
-    alert('Cập nhật trạng thái thất bại.')
+    errorMessage.value = err.response?.data?.message || 'Cập nhật trạng thái thất bại.'
+    showErrorModal.value = true
   }
 }
 
