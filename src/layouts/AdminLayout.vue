@@ -1,28 +1,40 @@
 <template>
-  <div class="admin-layout">
-    <aside class="admin-sidebar">
+  <div class="admin-layout" :class="{ 'sidebar-collapsed': isCollapsed }">
+  <aside class="admin-sidebar">
+    <button class="sidebar-toggle" @click="isCollapsed = !isCollapsed">
+      {{ isCollapsed ? '☰' : '✕' }}
+    </button>
       <div class="sidebar-logo">
-        <router-link to="/">MAX<span>VERSE</span></router-link>
-        <p class="sidebar-role">Quản trị viên</p>
+        <router-link to="/">MAX<span v-if="!isCollapsed">VERSE</span></router-link>
+        <p v-if="!isCollapsed" class="sidebar-role">Quản trị viên</p>
       </div>
 
       <nav class="sidebar-nav">
-        <router-link to="/admin" exact-active-class="active">
-          <span class="icon">📊</span> Dashboard
+        <router-link to="/admin" exact-active-class="active" :title="isCollapsed ? 'Dashboard' : ''">
+          <span class="icon">📊</span>
+          <span v-if="!isCollapsed">Dashboard</span>
         </router-link>
-        <router-link to="/admin/products" active-class="active">
-          <span class="icon">👟</span> Sản phẩm
+        <router-link to="/admin/products" active-class="active" :title="isCollapsed ? 'Sản phẩm' : ''">
+          <span class="icon">👟</span>
+          <span v-if="!isCollapsed">Sản phẩm</span>
         </router-link>
-        <router-link to="/admin/orders" active-class="active">
-          <span class="icon">📦</span> Đơn hàng
+        <router-link to="/admin/orders" active-class="active" :title="isCollapsed ? 'Đơn hàng' : ''">
+          <span class="icon">📦</span>
+          <span v-if="!isCollapsed">Đơn hàng</span>
         </router-link>
-        <router-link to="/admin/promotions" active-class="active">
-          <span class="icon">🏷️</span> Khuyến mãi
+        <router-link to="/admin/pos" active-class="active" :title="isCollapsed ? 'Bán tại quầy' : ''">
+          <span class="icon">🖥️</span>
+          <span v-if="!isCollapsed">Bán tại quầy</span>
+        </router-link>
+        <router-link to="/admin/promotions" active-class="active" :title="isCollapsed ? 'Khuyến mãi' : ''">
+          <span class="icon">🏷️</span>
+          <span v-if="!isCollapsed">Khuyến mãi</span>
         </router-link>
       </nav>
 
-      <button class="sidebar-logout" @click="handleLogout">
-        <span class="icon">🚪</span> Đăng xuất
+      <button class="sidebar-logout" @click="handleLogout" :title="isCollapsed ? 'Đăng xuất' : ''">
+        <span class="icon">🚪</span>
+        <span v-if="!isCollapsed">Đăng xuất</span>
       </button>
     </aside>
 
@@ -39,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, ref, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { useCartStore } from '../stores/cart'
@@ -48,6 +60,12 @@ const router = useRouter()
 const route = useRoute()
 const auth = useAuthStore()
 const cart = useCartStore()
+
+const isCollapsed = ref(localStorage.getItem('admin_sidebar_collapsed') === 'true')
+
+watch(isCollapsed, (val) => {
+  localStorage.setItem('admin_sidebar_collapsed', val)
+})
 
 const pageTitle = computed(() => {
   const titles = {
@@ -188,4 +206,31 @@ function handleLogout() {
   flex: 1;
   overflow-y: auto;
 }
+
+.sidebar-toggle {
+  position: absolute;
+  top: 20px;
+  right: -14px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--bg-elevated-2);
+  border: 1px solid var(--border-subtle);
+  font-size: 14px;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+}
+.sidebar-toggle:hover { color: var(--accent-orange); border-color: var(--accent-orange); }
+
+.admin-sidebar { position: relative; transition: width 0.2s ease; }
+
+.admin-layout.sidebar-collapsed .admin-sidebar { width: 72px; }
+.admin-layout.sidebar-collapsed .sidebar-nav a,
+.admin-layout.sidebar-collapsed .sidebar-logout {
+  justify-content: center;
+}
+.admin-layout.sidebar-collapsed .sidebar-logo { text-align: center; padding: 24px 8px 20px; }
 </style>

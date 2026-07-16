@@ -17,6 +17,7 @@ import AdminLayout from '../layouts/AdminLayout.vue'
 import AdminProducts from '../views/admin/AdminProducts.vue'
 import AdminProductForm from '../views/admin/AdminProductForm.vue'
 import AdminOrders from '../views/admin/AdminOrders.vue'
+import AdminPOS from '../views/admin/AdminPOS.vue'
 import AdminPromotions from '../views/admin/AdminPromotions.vue'
 import AdminOrderDetail from '../views/admin/AdminOrderDetails.vue'
 
@@ -45,7 +46,8 @@ const routes = [
       { path: 'products/:id/edit', name: 'admin-product-edit', component: AdminProductForm, props: true },
       { path: 'orders', name: 'admin-orders', component: AdminOrders },
       { path: 'promotions', name: 'admin-promotions', component: AdminPromotions },
-      { path: 'orders/:id', name: 'admin-order-detail', component: AdminOrderDetail, props: true }
+      { path: 'orders/:id', name: 'admin-order-detail', component: AdminOrderDetail, props: true },
+      { path: 'pos', name: 'admin-pos', component: AdminPOS }
     ]
   }
 ]
